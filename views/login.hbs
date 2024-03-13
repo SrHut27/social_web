@@ -1,0 +1,19 @@
+<div class="container">
+    <div class="container-login">
+        <form action="/auth/login" method="POST" class="login-form">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email">
+            <label for="password">Senha:</label>
+            <input type="password" name="password" id="password">
+            <input type="submit" value="Entrar">
+        </form>
+        <a href="/auth/register">Ainda não tem uma conta? Registre-se...</a><br>
+        <a href="/auth/forgot_password">Você esqueceu sua senha? Recupere aqui!</a>
+        <!-- Verificando se existem erros de sessão-->
+        {{#if errors}}
+            <div class="error">
+                {{errors.[0]}}
+            </div>
+        {{/if}}
+    </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="container-register">
+        <form action="/auth/register" method="POST" class="register-form">
+            <label for="name">Nome completo:</label>
+            <input type="text" name="name" id="name">
+            <label for="email">Seu email de preferência:</label>
+            <input type="email" name="email" id="email">
+            <label for="competencia">O que você é?</label>
+            <input type="competencia" name="competencia" id="competencia">
+            <label for="password">Sua senha:</label>
+            <input type="password" name="password" id="password">
+            <label for="confirm_password">Confirme sua senha:</label>
+            <input type="password" name="confirm_password" id="confirm_password">
+            <input type="submit" value="Cadastrar">
+        </form>
+        <a href="/auth/login">Já tem uma conta? Faça login...</a>
+
+        <!-- Verificando se existem erros de sessão-->
+        {{#if errors}}
+            <div class="error">
+                {{errors.[0]}}
+            </div>
+        {{/if}}
+    </div>
+</div>

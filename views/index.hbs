@@ -1,0 +1,33 @@
+<h1>Seja bem vindo de volta<h1>{{username}}</h1>
+
+<a href="/post/add">Criar uma publicação</a>
+
+
+<!-- Exibindo as postagens para os usuários-->
+    <h2>Posts Recentes:</h2>
+{{#each posts}}
+    <div>
+        <h3>{{pensamento}}</h3>
+        <p>Publicado por {{id_user}}</p>
+        <p>Data de Criação: {{created_at}}</p>
+        <p>Link: <a href={{link}}>{{link}}</a></p>
+        <!-- Verifica a extensão do arquivo e exibe de acordo -->
+        {{#if arquivo}}
+            {{#if (isImage file_extension)}}
+                <img src="{{arquivo}}" alt="Imagem">
+            {{else if (isVideo file_extension)}}
+                <video controls>
+                    <source src="{{arquivo}}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            {{else}}
+                Arquivo não suportado
+            {{/if}}
+        {{/if}}
+
+    </div>
+    <hr>
+{{/each}}
+
+
+

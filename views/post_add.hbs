@@ -1,0 +1,23 @@
+<div>
+    <div>
+<form action="/post/add" method="POST" enctype="multipart/form-data">
+<label for="pensamento">O que está em sua mente agora?</label>
+<input type="text" name="pensamento" id="pensamento">
+<label for="link">Gostaria de enviar um link?</label>
+<input type="text" name="link" id="link">
+<label for="arquivo">Uma foto ou vídeo que gostaria de enviar...</label>
+<input type="file" name="arquivo" id="arquivo" accept="mp4, png, jpeg, jpg">
+<input type="submit" value="Enviar">
+</form>
+
+
+        <!-- Verificando se existem erros-->
+        {{#if errors}}
+            <div class="error">
+                {{#each errors}}
+                <p>{{this}}</p>
+                {{/each}}
+            </div>
+        {{/if}}
+    </div>
+</div>
