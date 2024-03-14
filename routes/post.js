@@ -15,6 +15,7 @@ connection.connect ((err, results) => {
 
 router.get('/post', (req, res) => {
     if (req.session.user) {
+        
         // Capturando as postagens:
         const query = 'SELECT * from posts ORDER BY created_at DESC';
         connection.query(query, (error, results)=>{
@@ -59,5 +60,22 @@ router.post('/post/add', upload.single('arquivo'), (req, res) => {
         return res.redirect('/post/add');
     }
 });
+
+router.post('/post/comentario', (req, res) => {
+    if (req.session.user){
+        const { id_post, comment_text } = req.body;
+        const userId = req.session.user.id;
+
+        connection.query('INSERT into comment (id_user, id_post, comentarios) VALUES (?,?,?)', [userId, id_post, comment_text], (error, results) => {
+            if (error){
+                console.llog('Não foi possível conectar ao banco de dados', err);
+                return res.redirect('/post')
+            }
+            return res.redirect('/post');
+        });
+    } else {
+        return res.redirect('/auth/login')
+    }
+})
 
 module.exports = router;

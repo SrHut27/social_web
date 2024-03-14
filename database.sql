@@ -18,3 +18,15 @@ CREATE TABLE IF NOT EXISTS posts (
     file_extension VARCHAR(255);,
     FOREIGN KEY (id_user) REFERENCES users(id)
 );
+
+
+CREATE TABLE IF NOT EXISTS comment (
+    id INT AUTO_INCREMENT PRIMARY kEY,
+    id_user INT,
+    id_post INT,
+    comentarios TEXT(350),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_user) REFERENCES users(id),
+    FOREIGN KEY (id_post) REFERENCES posts(id)
+
+)
