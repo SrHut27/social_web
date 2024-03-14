@@ -2,50 +2,48 @@
 
 <a href="/post/add">Criar uma publicação</a>
 
-
-<!-- Exibindo as postagens para os usuários-->
-    <h2>Posts Recentes:</h2>
+<!-- Exibindo as postagens para os usuários -->
+<h2>Posts Recentes:</h2>
 
 {{#each posts}}
     <div>
         <h3>{{pensamento}}</h3>
-        <p>Publicado por {{id_user}}</p>
+        <p>Publicado por {{author_name}}</p>
         <p>Data de Criação: {{created_at}}</p>
         <p>Link: <a href={{link}}>{{link}}</a></p>
-        <!-- Verifica a extensão do arquivo e exibe de acordo -->
+
+        <!-- Verifica a existência de arquivos e exibe de acordo -->
         {{#if arquivo}}
             {{#if (isImage file_extension)}}
                 <img src="{{arquivo}}" alt="Imagem">
             {{else if (isVideo file_extension)}}
                 <video controls>
                     <source src="{{arquivo}}" type="video/mp4">
-                    Your browser does not support the video tag.
+                    Seu navegador não suporta vídeos.
                 </video>
             {{else}}
                 Arquivo não suportado
             {{/if}}
+        {{/if}}
 
-            <form action="/post/comentario" method="post">
-                <input type="hidden" name="id_post" value="{{id}}">
-                <input type="text" name="comment_text" placeholder="Digite seu comentário">
-                <button type="submit">Enviar</button>
-            </form>
-            <button id="toggleButton{{id}}" class="toggleButton">Mostrar/Esconder comentários</button>
-            <div id="comentarios{{id}}" class="comentarios" style="display: none;">
-                <!-- Exibir comentários -->
-                <h4>Comentários:</h4>
-                <ul>
-                {{#if comentarios}}
-                    {{#each (split comentarios '|')}}
-                        <li>{{this}}</li>
-                    {{/each}}
+        <!-- Formulário para adicionar comentários -->
+        <form action="/post/comentario" method="post">
+            <input type="hidden" name="id_post" value="{{id}}">
+            <input type="text" name="comment_text" placeholder="Digite seu comentário">
+            <button type="submit">Enviar</button>
+        </form>
+
+        <!-- Botão para mostrar/esconder comentários -->
+        <button id="toggleButton{{id}}" class="toggleButton">Mostrar/Esconder comentários</button>
+        <div id="comentarios{{id}}" class="comentarios" style="display: none;">
+            <ul>
+                {{#each comments}}
+                    <li>{{this.texto}} - Comentado por: {{this.autor}}</li>
                 {{else}}
                     <li>Nenhum comentário ainda</li>
-                {{/if}}
-                </ul>
-            </div>
-
-        {{/if}}
+                {{/each}}
+            </ul>
+        </div>
     </div>
     <hr>
 {{/each}}

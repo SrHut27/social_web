@@ -18,24 +18,52 @@ router.get('/post', (req, res) => {
         
         // Capturando as postagens:
         const query = `
-        SELECT posts.*, GROUP_CONCAT(comment.comentarios SEPARATOR '|') AS comentarios
-        FROM posts
-        LEFT JOIN comment ON posts.id = comment.id_post
+        SELECT 
+            posts.*,
+            users.name AS author_name,
+            comment.id_user AS comment_user_id,
+            GROUP_CONCAT(comment.comentarios SEPARATOR '|') AS comentarios,
+            GROUP_CONCAT(users_comment.name SEPARATOR '|') AS autorescomentarios
+        FROM
+            posts
+        LEFT JOIN
+            comment ON posts.id = comment.id_post
+        LEFT JOIN
+            users ON posts.id_user = users.id
+        LEFT JOIN
+            users AS users_comment ON comment.id_user = users_comment.id
         GROUP BY posts.id
-        ORDER BY posts.created_at DESC
+        ORDER BY posts.created_at DESC;
     `;
+    
         connection.query(query, (error, results)=>{
             if(error){
                 console.log('Não foi possível conectar ao banco de dados, por favor, aguarde');
                 return res.redirect('/post');
             };
-            res.render('index' ,{username: req.session.user.name, posts: results });
+
+            // Mapeando os resultados para garantir que cada post tenha a propriedade 'comments' definida como um array vazio
+            const postsWithComments = results.map(post => {
+                if (post.comentarios) {
+                    post.comments = post.comentarios.split('|').map((comment, index) => ({
+                        texto: comment,
+                        autor: post.autorescomentarios.split('|')[index]
+                    }));
+                } else {
+                    post.comments = [];
+                }
+                return post;
+            });
+
+            res.render('index' ,{username: req.session.user.name, posts: postsWithComments });
         })
         
     } else{
         return res.redirect('/auth/login')
     }
 });
+
+
 
 router.get('/post/add', (req, res) => {
     if (req.session.user) {
@@ -72,9 +100,9 @@ router.post('/post/comentario', (req, res) => {
         const { id_post, comment_text } = req.body;
         const userId = req.session.user.id;
 
-        connection.query('INSERT into comment (id_user, id_post, comentarios) VALUES (?,?,?)', [userId, id_post, comment_text], (error, results) => {
+        connection.query('INSERT into comment (id_user, id_post, comentarios) VALUES (?, ?, ?)', [userId, id_post, comment_text], (error, results) => {
             if (error){
-                console.llog('Não foi possível conectar ao banco de dados', err);
+                console.log('Erro ao inserir comentário no banco de dados:', error);
                 return res.redirect('/post')
             }
             return res.redirect('/post');
@@ -83,5 +111,6 @@ router.post('/post/comentario', (req, res) => {
         return res.redirect('/auth/login')
     }
 })
+
 
 module.exports = router;
