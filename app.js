@@ -41,7 +41,12 @@ connection.connect((err) => {
 // Configurando o handlebars, que será nossa views engine:
 app.engine('hbs', hbs.engine({
     extname: 'hbs', // Definimos aqui que a extensão dos arquivos de template será: hbs
-    defaultLayout: 'main' // será o layout base para todos os outros
+    defaultLayout: 'main',
+    helpers: {
+        split: function (string, separator) {
+            return string.split(separator);
+        }
+    } // será o layout base para todos os outros
 }));
 //Definindo o handlebars como o motor de renderização de templates:
 app.set('view engine', 'hbs');
@@ -78,7 +83,7 @@ app.use((req, res, next) => {
     next()
 }); 
 
-//Importando as rotas de métodos do auth.js:
+//Importando as rotas de métodos do auth.js e das postagens:
 app.use('/auth', authRoutes);
 app.use('', postRoutes)
 

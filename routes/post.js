@@ -17,7 +17,13 @@ router.get('/post', (req, res) => {
     if (req.session.user) {
         
         // Capturando as postagens:
-        const query = 'SELECT * from posts ORDER BY created_at DESC';
+        const query = `
+        SELECT posts.*, GROUP_CONCAT(comment.comentarios SEPARATOR '|') AS comentarios
+        FROM posts
+        LEFT JOIN comment ON posts.id = comment.id_post
+        GROUP BY posts.id
+        ORDER BY posts.created_at DESC
+    `;
         connection.query(query, (error, results)=>{
             if(error){
                 console.log('Não foi possível conectar ao banco de dados, por favor, aguarde');

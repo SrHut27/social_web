@@ -1,18 +1,18 @@
 document.addEventListener('DOMContentLoaded', function(){
         
-    function toggleDiv(){
-
-        const div = document.getElementById('comentarios');
-        if(div.style.display   == 'none'){
-            div.style.display = 'block';
-        } else {
-            div.style.display = 'none';
-        };
-    };
-
-    const button = document.getElementById('toggleButton');
-    if(button) {
-        button.addEventListener('click', toggleDiv)
-    }
+    const toggleButtons = document.querySelectorAll('.toggleButton');
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const postId = button.id.replace('toggleButton', '');
+            const comentariosDiv = document.getElementById(`comentarios${postId}`);
+            if (comentariosDiv.style.display === 'none') {
+                comentariosDiv.style.display = 'block';
+                button.textContent = 'Esconder comentários';
+            } else {
+                comentariosDiv.style.display = 'none';
+                button.textContent = 'Mostrar comentários';
+            }
+        });
+    });
 
 });

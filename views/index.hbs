@@ -1,10 +1,11 @@
-<h1>Seja bem vindo de volta<h1>{{username}}</h1>
+<h1>Seja bem vindo de volta {{username}}</h1>
 
 <a href="/post/add">Criar uma publicação</a>
 
 
 <!-- Exibindo as postagens para os usuários-->
     <h2>Posts Recentes:</h2>
+
 {{#each posts}}
     <div>
         <h3>{{pensamento}}</h3>
@@ -23,19 +24,28 @@
             {{else}}
                 Arquivo não suportado
             {{/if}}
+
             <form action="/post/comentario" method="post">
                 <input type="hidden" name="id_post" value="{{id}}">
                 <input type="text" name="comment_text" placeholder="Digite seu comentário">
                 <button type="submit">Enviar</button>
             </form>
-            <!-- Exibir comentários -->
-            <button id="toggleButton">Mostrar/Esconder comentários</button>
-            <div id="comentarios">
-                <h5>olá comentários!</h5>
+            <button id="toggleButton{{id}}" class="toggleButton">Mostrar/Esconder comentários</button>
+            <div id="comentarios{{id}}" class="comentarios" style="display: none;">
+                <!-- Exibir comentários -->
+                <h4>Comentários:</h4>
+                <ul>
+                {{#if comentarios}}
+                    {{#each (split comentarios '|')}}
+                        <li>{{this}}</li>
+                    {{/each}}
+                {{else}}
+                    <li>Nenhum comentário ainda</li>
+                {{/if}}
+                </ul>
             </div>
 
         {{/if}}
-
     </div>
     <hr>
 {{/each}}
