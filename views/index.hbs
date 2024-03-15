@@ -1,23 +1,27 @@
 <h1>Seja bem vindo de volta {{username}}</h1>
 
-<a href="/post/add">Criar uma publicação</a>
-
+{{#if posts}}
 <!-- Exibindo as postagens para os usuários -->
 <h2>Posts Recentes:</h2>
+{{/if}}
+<p>Ninguém publicou nada ainda...</p>
+
 
 {{#each posts}}
     <div>
         <h3>{{pensamento}}</h3>
         <p>Publicado por {{author_name}}</p>
         <p>Data de Criação: {{created_at}}</p>
-        <p>Link: <a href={{link}}>{{link}}</a></p>
+        {{#if link}}
+            <p>Link: <a href={{link}}>{{link}}</a></p>
+        {{/if}}
 
         <!-- Verifica a existência de arquivos e exibe de acordo -->
         {{#if arquivo}}
             {{#if (isImage file_extension)}}
-                <img src="{{arquivo}}" alt="Imagem">
+                <img src="{{arquivo}}" alt="Imagem" width="20%">
             {{else if (isVideo file_extension)}}
-                <video controls>
+                <video width="20%" controls>
                     <source src="{{arquivo}}" type="video/mp4">
                     Seu navegador não suporta vídeos.
                 </video>
@@ -34,7 +38,7 @@
         </form>
 
         <!-- Botão para mostrar/esconder comentários -->
-        <button id="toggleButton{{id}}" class="toggleButton">Mostrar/Esconder comentários</button>
+        <button id="toggleButton{{id}}" class="toggleButton">Mostrar comentários</button>
         <div id="comentarios{{id}}" class="comentarios" style="display: none;">
             <ul>
                 {{#each comments}}
@@ -44,6 +48,12 @@
                 {{/each}}
             </ul>
         </div>
+            {{#if (isUsersPost id_user ../session.user.id)}}
+                <form action="/post/delete/{{id}}" method="post">
+                    <button type="submit">Excluir Publicação</button>
+                </form>
+            {{/if}}
+
     </div>
     <hr>
 {{/each}}

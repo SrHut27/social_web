@@ -55,7 +55,7 @@ router.get('/post', (req, res) => {
                 return post;
             });
 
-            res.render('index' ,{username: req.session.user.name, posts: postsWithComments });
+            res.render('index' ,{username: req.session.user.name,session: req.session, posts: postsWithComments });
         })
         
     } else{
@@ -110,7 +110,42 @@ router.post('/post/comentario', (req, res) => {
     } else {
         return res.redirect('/auth/login')
     }
-})
+});
+
+router.post('/post/delete/:id', (req, res) => {
+    const postId = req.params.id;
+    const userId = req.session.user.id;
+
+    // Verifica se o usuário logado é o autor da publicação
+    connection.query('SELECT * FROM posts WHERE id = ? AND id_user = ?', [postId, userId], (error, results) => {
+        if (error) {
+            console.log('Erro ao verificar a autoria da publicação:', error);
+            return res.redirect('/post');
+        }
+
+        // Se o usuário for o autor da publicação, procede com a exclusão
+        if (results.length > 0) {
+            // Primeiro, exclui os comentários associados à publicação
+            connection.query('DELETE FROM comment WHERE id_post = ?', [postId], (commentDeleteError, commentDeleteResults) => {
+                if (commentDeleteError) {
+                    console.log('Erro ao excluir os comentários:', commentDeleteError);
+                }
+
+                // Após excluir os comentários, exclui a publicação
+                connection.query('DELETE FROM posts WHERE id = ?', [postId], (deleteError, deleteResults) => {
+                    if (deleteError) {
+                        console.log('Erro ao excluir a publicação:', deleteError);
+                    }
+                    return res.redirect('/post');
+                });
+            });
+        } else {
+            // Se o usuário não for o autor da publicação, redireciona de volta para as postagens
+            return res.redirect('/post');
+        }
+    });
+});
+
 
 
 module.exports = router;

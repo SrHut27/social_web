@@ -45,9 +45,13 @@ app.engine('hbs', hbs.engine({
     helpers: {
         split: function (string, separator) {
             return string.split(separator);
+        },
+        isUsersPost: function(postUserId, sessionUserId) {
+            return postUserId === sessionUserId;
         }
     } // será o layout base para todos os outros
 }));
+
 //Definindo o handlebars como o motor de renderização de templates:
 app.set('view engine', 'hbs');
 
