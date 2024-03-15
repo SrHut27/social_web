@@ -2,7 +2,6 @@
 require('dotenv').config();
 const express = require('express');
 const hbs = require('express-handlebars');
-const Handlebars = require('handlebars');
 const bodyParser = require('body-parser')
 const session = require('express-session');
 const helmet = require('helmet');
@@ -48,6 +47,12 @@ app.engine('hbs', hbs.engine({
         },
         isUsersPost: function(postUserId, sessionUserId) {
             return postUserId === sessionUserId;
+        },
+        isImage: function(fileExtension, options) {
+            return fileExtension === 'jpg' || fileExtension === 'jpeg' || fileExtension === 'png';
+        },
+        isVideo: function(fileExtension, options) {
+            return fileExtension === 'mp4';
         }
     } // será o layout base para todos os outros
 }));
@@ -65,20 +70,6 @@ app.use(session({ // Configurando a sessão de usuário
     resave: true,
     saveUninitialized: true,
 }));
-
-// ATENÇÃO, muito importante para os próximos projetos:
-// Essa lógica permite que você possa carregar qualquer arquivo no template do handlebars, pois está retornando a extensão e repassando para o template
-
-// Helper para verificar se a extensão do arquivo é de uma imagem
-Handlebars.registerHelper('isImage', function(fileExtension, options) {
-    return fileExtension === 'jpg' || fileExtension === 'jpeg' || fileExtension === 'png';
-});
-
-// Helper para verificar se a extensão do arquivo é de um vídeo
-Handlebars.registerHelper('isVideo', function(fileExtension, options) {
-    return fileExtension === 'mp4';
-});
-
 
 // Midleware para configurar mensagens de erro próppria:
 app.use((req, res, next) => {
