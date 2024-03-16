@@ -1,15 +1,27 @@
-<div class="container">
-    <div class="container-login">
-        <form action="/auth/login" method="POST" class="login-form">
-            <label for="email">Email:</label>
-            <input type="email" name="email" id="email">
-            <label for="password">Senha:</label>
-            <input type="password" name="password" id="password">
-            <input type="submit" value="Entrar">
-        </form>
-        <a href="/auth/register">Ainda não tem uma conta? Registre-se...</a><br>
-        <a href="/auth/forgot_password">Você esqueceu sua senha? Recupere aqui!</a>
-        <!-- Verificando se existem erros de sessão-->
+<section class="main">
+    <div class="content">
+        <div class="facebook-info">
+            <h1>SocialWeb</h1>
+            <h2>O SocialWeb ajuda você a se conectar e compartilhar com as pessoas que fazem parte da sua vida.</h2>
+        </div>
+        <div class="facebook-caixa">
+        <div class="facebook-caixasuprema">
+            <form action="/auth/login" method="POST" class="login-form">
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email">
+                <label for="password">Senha:</label>
+                <input type="password" name="password" id="password">
+                <button class="button entrar" type="submit" value="Entrar">Logar</button>
+            </form>
+            <a href="/auth/forgot_password">Você esqueceu sua senha? Recupere aqui!</a>
+                <hr>
+                <button class="button criar">Criar nova conta</button>
+            </div>
+            <p><strong>Crie uma Página</strong> para uma celebridade, uma marca ou uma empresa.</p>
+        </div>
+    </div>
+
+            <!-- Verificando se existem erros de sessão-->
         {{#if errors}}
             <div class="error">
                 {{errors.[0]}}
@@ -17,3 +29,4 @@
         {{/if}}
     </div>
 </div>
+</section>

@@ -1,0 +1,120 @@
+.main{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgb(240, 242, 245);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+.content {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 65vw;
+}
+.facebook-info {
+    width: 500px;
+}
+
+.facebook-info h1 {
+    color: #0866ff;
+    font-size: 3.5rem;
+    margin-bottom: 10px;
+}
+.facebook-info h2 {
+    font-weight: normal;
+    font-size: 1.8rem;
+    margin: 0px;
+}
+
+.facebook-caixa {
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+.facebook-caixa p {
+    text-align: center;
+    font-size: 14px;
+}
+.facebook-caixasuprema {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    gap: 1.5rem;
+    padding: 1rem;
+    width: 100%;
+    box-shadow: rgb(0 0 0 / 10%) 0px 2px 4px, rgb(0 0 0 / 10%) 0px 8px 32px;
+
+}
+
+.facebook-caixasuprema input {
+    outline: none;
+    font-size: 16px;
+    color: #1d2129;
+    padding: 14px 16px;
+    width: 315px;
+    height: 1.4rem;
+    border-radius: 10px;
+    border: 1px solid #d4d6d9;
+    vertical-align: middle;
+}
+
+.input-submit {
+    padding: 1rem;
+    color: white;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.facebook-caixasuprema input:hover {
+    outline: solid rgb(0, 110, 255) 1px;
+}
+.button {
+    padding: 1rem;
+    color: white;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.entrar {
+    background-color: #0866ff;
+}
+.entrar:hover {
+    background-color: #478dff;
+}
+
+.criar {
+    background-color: #42b72a;
+    width: auto;
+}
+.criar:hover {
+    background-color: #1b9f00;
+}
+
+
+.facebook-caixasuprema a {
+    color: rgb(0, 110, 255);
+    text-decoration: none;
+    cursor: pointer;
+}
+.facebook-caixasuprema a:hover {
+    text-decoration: underline;
+}
+.facebook-caixasuprema hr {
+    width: 100%;
+    border: 1px solid rgb(212, 212, 212);
+}

@@ -16,25 +16,26 @@ connection.connect ((err, results) => {
 router.get('/post', (req, res) => {
     if (req.session.user) {
         
-        // Capturando as postagens:
-        const query = `
-        SELECT 
-            posts.*,
-            users.name AS author_name,
-            comment.id_user AS comment_user_id,
-            GROUP_CONCAT(comment.comentarios SEPARATOR '|') AS comentarios,
-            GROUP_CONCAT(users_comment.name SEPARATOR '|') AS autorescomentarios
-        FROM
-            posts
-        LEFT JOIN
-            comment ON posts.id = comment.id_post
-        LEFT JOIN
-            users ON posts.id_user = users.id
-        LEFT JOIN
-            users AS users_comment ON comment.id_user = users_comment.id
-        GROUP BY posts.id
-        ORDER BY posts.created_at DESC;
-    `;
+// Capturando as postagens:
+const query = `
+    SELECT 
+        posts.*,
+        users.name AS author_name,
+        GROUP_CONCAT(comment.id_user) AS comment_user_ids,
+        GROUP_CONCAT(comment.id) AS comment_ids,
+        GROUP_CONCAT(comment.comentarios SEPARATOR '|') AS comentarios,
+        GROUP_CONCAT(users_comment.name SEPARATOR '|') AS autorescomentarios
+    FROM
+        posts
+    LEFT JOIN
+        comment ON posts.id = comment.id_post
+    LEFT JOIN
+        users ON posts.id_user = users.id
+    LEFT JOIN
+        users AS users_comment ON comment.id_user = users_comment.id
+    GROUP BY posts.id
+    ORDER BY posts.created_at DESC;
+`;
     
         connection.query(query, (error, results)=>{
             if(error){
@@ -45,10 +46,12 @@ router.get('/post', (req, res) => {
             // Mapeando os resultados para garantir que cada post tenha a propriedade 'comments' definida como um array vazio
             const postsWithComments = results.map(post => {
                 if (post.comentarios) {
-                    post.comments = post.comentarios.split('|').map((comment, index) => ({
+                    post.comments = post.comentarios ? post.comentarios.split('|').map((comment, index) => ({
                         texto: comment,
-                        autor: post.autorescomentarios.split('|')[index]
-                    }));
+                        autor: post.autorescomentarios.split('|')[index],
+                        comment_user_id: post.comment_user_ids ? post.comment_user_ids.split('|')[index]: undefined, // Assuming you have an aggregated column 'comment_user_ids'
+                        comment_id: post.comment_ids ? post.comment_ids.split('|')[index]: undefined, // Assuming you have an aggregated column 'comment_ids'
+                    })) : [];
                 } else {
                     post.comments = [];
                 }
@@ -145,6 +148,33 @@ router.post('/post/delete/:id', (req, res) => {
         }
     });
 });
+
+router.post('/comment/delete/:id', (req, res) => {
+    const commentId = req.params.id;
+    const userId = req.session.user.id;
+
+    // Verifica se o usuário logado é o autor do comentário
+    connection.query('SELECT * FROM comment WHERE id = ? AND id_user = ?', [commentId, userId], (error, results) => {
+        if (error) {
+            console.log('Erro ao verificar a autoria do comentário:', error);
+            return res.redirect('/post');
+        }
+
+        // Se o usuário for o autor do comentário, procede com a exclusão
+        if (results.length > 0) {
+            connection.query('DELETE FROM comment WHERE id = ?', [commentId], (deleteError, deleteResults) => {
+                if (deleteError) {
+                    console.log('Erro ao excluir o comentário:', deleteError);
+                }
+                return res.redirect('/post');
+            });
+        } else {
+            // Se o usuário não for o autor do comentário, redireciona de volta para as postagens
+            return res.redirect('/post');
+        }
+    });
+});
+
 
 
 

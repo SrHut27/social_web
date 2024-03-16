@@ -35,15 +35,23 @@
 
             <!-- Botão para mostrar/esconder comentários -->
             <button id="toggleButton{{id}}" class="toggleButton">Mostrar comentários</button>
-            <div id="comentarios{{id}}" class="comentarios" style="display: none;">
-                <ul>
-                    {{#each comments}}
-                        <li>{{this.texto}} - Comentado por: {{this.autor}}</li>
-                    {{else}}
-                        <li>Nenhum comentário ainda</li>
-                    {{/each}}
-                </ul>
-            </div>
+                    <!-- ... dentro do loop de posts ... -->
+<div id="comentarios{{id}}" class="comentarios" style="display: none;">
+    <ul>
+        {{#each comments}}
+            <li>
+                {{this.texto}} - Comentado por: {{this.autor}}
+                {{#if (isUsersComment id_user ../session.user.id)}}
+                    <form action="/comment/delete/{{comment_id}}" method="post">
+                        <button type="submit">Excluir Comentário</button>
+                    </form>
+                {{/if}}
+            </li>
+        {{else}}
+            <li>Ninguém comentou ainda</li>
+        {{/each}}
+    </ul>
+</div>
                 {{#if (isUsersPost id_user ../session.user.id)}}
                     <form action="/post/delete/{{id}}" method="post">
                         <button type="submit">Excluir Publicação</button>

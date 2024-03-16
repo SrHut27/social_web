@@ -53,7 +53,13 @@ app.engine('hbs', hbs.engine({
         },
         isVideo: function(fileExtension, options) {
             return fileExtension === 'mp4';
+        },
+        // Helper function to check if the user is the author of the comment
+        isUsersComment: function(commentUserId, sessionUserId) {
+            return commentUserId === sessionUserId;
         }
+        
+        
     } // será o layout base para todos os outros
 }));
 
@@ -71,17 +77,18 @@ app.use(session({ // Configurando a sessão de usuário
     saveUninitialized: true,
 }));
 
+
+
+//Importando as rotas de métodos do auth.js e das postagens:
+app.use('/auth', authRoutes);
+app.use('', postRoutes);
+
 // Midleware para configurar mensagens de erro próppria:
 app.use((req, res, next) => {
     res.locals.messages = req.session.messages || [];
     req.session.messages = [];
     next()
 }); 
-
-//Importando as rotas de métodos do auth.js e das postagens:
-app.use('/auth', authRoutes);
-app.use('', postRoutes)
-
 
 // Iniciando a porta do servidor
 app.listen(PORT, () =>{
