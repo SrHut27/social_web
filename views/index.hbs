@@ -38,18 +38,20 @@
                     <!-- ... dentro do loop de posts ... -->
 <div id="comentarios{{id}}" class="comentarios" style="display: none;">
     <ul>
-        {{#each comments}}
-            <li>
-                {{this.texto}} - Comentado por: {{this.autor}}
-                {{#if (isUsersComment id_user ../session.user.id)}}
-                    <form action="/comment/delete/{{comment_id}}" method="post">
-                        <button type="submit">Excluir Comentário</button>
-                    </form>
-                {{/if}}
-            </li>
-        {{else}}
-            <li>Ninguém comentou ainda</li>
-        {{/each}}
+{{#each comments}}
+    <li>
+        {{this.texto}} - Comentado por: {{this.autor}}
+        {{#if (isUsersComment this.id_user ../session.user.id)}}
+            <form action="/comment/delete/{{this.comment_id}}" method="post">
+                <input type="hidden" name="comment_id" value="{{this.comment_id}}">
+                <button type="submit">Excluir Comentário</button>
+            </form>
+        {{/if}}
+    </li>
+{{else}}
+    <li>Ninguém comentou ainda</li>
+{{/each}}
+
     </ul>
 </div>
                 {{#if (isUsersPost id_user ../session.user.id)}}
@@ -57,6 +59,7 @@
                         <button type="submit">Excluir Publicação</button>
                     </form>
                 {{/if}}
+
 
         </div>
         <hr>

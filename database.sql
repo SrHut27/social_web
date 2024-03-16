@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS posts (
     link VARCHAR(255),
     arquivo VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    file_extension VARCHAR(255);,
+    file_extension VARCHAR(255),
     FOREIGN KEY (id_user) REFERENCES users(id)
 );
 

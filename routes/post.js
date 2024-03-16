@@ -153,7 +153,7 @@ router.post('/comment/delete/:id', (req, res) => {
     const commentId = req.params.id;
     const userId = req.session.user.id;
 
-    // Verifica se o usuário logado é o autor do comentário
+    // Verifica se o usuário logado é o autor do comentário a ser excluído
     connection.query('SELECT * FROM comment WHERE id = ? AND id_user = ?', [commentId, userId], (error, results) => {
         if (error) {
             console.log('Erro ao verificar a autoria do comentário:', error);
@@ -169,11 +169,41 @@ router.post('/comment/delete/:id', (req, res) => {
                 return res.redirect('/post');
             });
         } else {
-            // Se o usuário não for o autor do comentário, redireciona de volta para as postagens
-            return res.redirect('/post');
+            // Se o usuário não for o autor do comentário, verificar se ele é o autor da publicação associada ao comentário
+            connection.query('SELECT id_post FROM comment WHERE id = ?', [commentId], (postIdError, postIdResults) => {
+                if (postIdError) {
+                    console.log('Erro ao obter o ID da publicação associada ao comentário:', postIdError);
+                    return res.redirect('/post');
+                }
+
+                const postId = postIdResults[0].id_post;
+
+                // Verificar se o usuário é o autor da publicação associada ao comentário
+                connection.query('SELECT * FROM posts WHERE id = ? AND id_user = ?', [postId, userId], (postError, postResults) => {
+                    if (postError) {
+                        console.log('Erro ao verificar a autoria da publicação associada ao comentário:', postError);
+                        return res.redirect('/post');
+                    }
+
+                    // Se o usuário for o autor da publicação associada ao comentário, procede com a exclusão
+                    if (postResults.length > 0) {
+                        connection.query('DELETE FROM comment WHERE id = ?', [commentId], (deleteError, deleteResults) => {
+                            if (deleteError) {
+                                console.log('Erro ao excluir o comentário:', deleteError);
+                            }
+                            return res.redirect('/post');
+                        });
+                    } else {
+                        // Se o usuário não for o autor do comentário nem da publicação associada, redireciona de volta para as postagens
+                        return res.redirect('/post');
+                    }
+                });
+            });
         }
     });
 });
+
+
 
 
 
