@@ -28,32 +28,31 @@
 
             <!-- Formulário para adicionar comentários -->
             <form action="/post/comentario" method="post">
-                <input type="hidden" name="id_post" value="{{id}}">
-                <input type="text" name="comment_text" placeholder="Digite seu comentário">
+                <input type="hidden" name="id_post" value="{{id}}" >
+                <input type="text" name="comment_text" placeholder="Digite seu comentário" required>
                 <button type="submit">Enviar</button>
             </form>
 
             <!-- Botão para mostrar/esconder comentários -->
             <button id="toggleButton{{id}}" class="toggleButton">Mostrar comentários</button>
                     <!-- ... dentro do loop de posts ... -->
-<div id="comentarios{{id}}" class="comentarios" style="display: none;">
-    <ul>
-{{#each comments}}
-    <li>
-        {{this.texto}} - Comentado por: {{this.autor}}
-        {{#if (isUsersComment this.id_user ../session.user.id)}}
-            <form action="/comment/delete/{{this.comment_id}}" method="post">
-                <input type="hidden" name="comment_id" value="{{this.comment_id}}">
-                <button type="submit">Excluir Comentário</button>
-            </form>
-        {{/if}}
-    </li>
-{{else}}
-    <li>Ninguém comentou ainda</li>
-{{/each}}
-
-    </ul>
-</div>
+    <div id="comentarios{{id}}" class="comentarios" style="display: none;">
+        <ul>
+            {{#each comments}}
+                <li>
+                    {{this.texto}} - Comentado por: {{this.autor}}
+                    {{#if (allowCommentDeletion ../session.user.id this.id_user ../id_user)}}
+                        <form action="/comment/delete/{{this.comment_id}}" method="post">
+                            <input type="hidden" name="comment_id" value="{{this.comment_id}}">
+                            <button type="submit">Excluir Comentário</button>
+                        </form>
+                    {{/if}}
+                </li>
+            {{else}}
+                <li>Ninguém comentou ainda</li>
+            {{/each}}
+        </ul>
+    </div>
                 {{#if (isUsersPost id_user ../session.user.id)}}
                     <form action="/post/delete/{{id}}" method="post">
                         <button type="submit">Excluir Publicação</button>

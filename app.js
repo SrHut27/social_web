@@ -57,8 +57,10 @@ app.engine('hbs', hbs.engine({
         // Helper function to check if the user is the author of the comment
         isUsersComment: function(commentUserId, sessionUserId) {
             return commentUserId === sessionUserId;
+        },
+        allowCommentDeletion(sessionUserId, commentUserId, postUserId) {
+            return sessionUserId === postUserId || sessionUserId === commentUserId;
         }
-        
         
     } // será o layout base para todos os outros
 }));
